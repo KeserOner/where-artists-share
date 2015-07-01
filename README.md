@@ -4,8 +4,8 @@ Art website in django 1.8.2 / python 3.4
 
 You need to install virtualenv, pip and git.
 
-sudo apt-get install python-pip python-dev build-essential 
-sudo pip install --upgrade pip 
+sudo apt-get install python-pip python-dev build-essential
+sudo pip install --upgrade pip
 sudo pip install --upgrade virtualenv
 
 Create a virtualenv :
