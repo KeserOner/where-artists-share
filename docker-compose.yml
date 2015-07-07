@@ -1,6 +1,6 @@
 web:
     build: .
-    command: python manage.py migration
+    command: python manage.py migrate
     volumes:
         - ./was:/where-artists-share
     ports:
