@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from .models import Artists, User
 
 class CreateArtistForm(UserCreationForm):
