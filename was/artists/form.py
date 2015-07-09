@@ -2,6 +2,7 @@
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Artists, User
 
 class CreateArtistForm(UserCreationForm):
     class Meta:
@@ -13,6 +14,8 @@ class CreateArtistForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
+            artist = Artists(user=user)
+            artist.save()
         return user
 
 
