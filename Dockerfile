@@ -15,10 +15,5 @@ WORKDIR /where-artists-share
 ADD requirements.txt /where-artists-share/
 RUN pip install -r requirements.txt
 
-# Copying all the files to the projet folder on the docker image
-ADD . /where-artists-share
-
-CMD ["python", "was/migrate.py", "migrate"]
-
 # Exposing port 8000
 EXPOSE 8000
