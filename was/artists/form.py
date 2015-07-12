@@ -31,4 +31,3 @@ class CreateArtistForm(UserCreationForm):
         return user
 
 
-
