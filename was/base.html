@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/media/css/style.css" />
+    <title>{% block title %}Where Artists Share{% endblock %}</title>
+  </head>
+
+  <body>
+    <header></header>
+    <nav>
+      {% block nav %}
+      <ul>
+        <li><a href="/">Accueil</a></li>
+        <!-- TODO -->
+        {{ user }}
+        {% if user.is_anonymous %}
+        <li><a href="{% url 'register_user' %}">Sign up</a></li>
+        <li><a href="{% url 'artist_login' %}">Sign in</a></li>
+        {% else %}
+        <li><a href="{% url 'artist_logout' %}">Log Out</a></li>
+        {% endif %}
+      </ul>
+      {% endblock %}
+    </nav>
+
+    <section id="content">
+      {% block content %}{% endblock %}
+    </section>
+
+    <footer>© Where Artists Share</footer>
+  </body>
+</html>
