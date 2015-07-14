@@ -16,7 +16,7 @@ def artist_login(request):
         if form.is_valid():
             form.clean()
             login(request, form.user_cache)
-            return HttpResponseRedirect('/artist/register')
+            return HttpResponseRedirect('/')
     else:
         form = AuthenticationForm()
 
@@ -24,4 +24,4 @@ def artist_login(request):
 
 def artist_logout(request):
     logout(request)
-    return HttpResponseRedirect('/artist/login')
+    return HttpResponseRedirect('/')
