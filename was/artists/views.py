@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 class CreateArtistView(CreateView):
     template_name = 'register.html'
     form_class = CreateArtistForm
+    success_url = '/'
 
 def artist_login(request):
     if request.method == 'POST':
