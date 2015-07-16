@@ -17,12 +17,8 @@ class UpdateArtistView(UpdateView):
     form_class = UpdateArtistForm
     success_url = '/'
 
-    def get_queryset(self):
-        artist = Artists.objects.filter(user=self.request.user).values_list('id', flat=True)
-        return artist[0]
-        #lol = get_object_or_404(Artists, pk=artist[0])
-        #print(type(lol))
-
+    def get_object(self):
+        return get_object_or_404(Artists, user=self.request.user)
 
 
 def artist_login(request):
@@ -36,6 +32,7 @@ def artist_login(request):
         form = AuthenticationForm()
 
     return render(request, 'login.html', {'form' : form})
+
 
 def artist_logout(request):
     logout(request)

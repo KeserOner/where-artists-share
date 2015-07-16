@@ -31,6 +31,7 @@ class CreateArtistForm(UserCreationForm):
             artist.save()
         return user
 
+
 class UpdateArtistForm(ModelForm):
     class Meta:
         model = Artists
