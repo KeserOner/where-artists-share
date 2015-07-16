@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django.contrib.auth.forms import UserCreationForm, forms
+from django.forms.models import ModelForm
 from .models import Artists, User
 
 class CreateArtistForm(UserCreationForm):
@@ -30,4 +31,7 @@ class CreateArtistForm(UserCreationForm):
             artist.save()
         return user
 
-
+class UpdateArtistForm(ModelForm):
+    class Meta:
+        model = Artists
+        fields = '__all__'
