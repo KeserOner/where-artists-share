@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
-from .form import CreateArtistForm, UpdateArtistForm, Artists
+from .form import CreateArtistForm, UpdateArtistForm, Artists, User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect
@@ -13,9 +13,16 @@ class CreateArtistView(CreateView):
 
 
 class UpdateArtistView(UpdateView):
-    template_name = 'register.html'
+    template_name = 'update.html'
     form_class = UpdateArtistForm
     success_url = '/'
+
+    def get_initial(self):
+        initial = {}
+        user = User.objects.get(username=self.request.user.username)
+        initial['username'] = user.username
+        initial['email'] = user.email
+        return initial
 
     def get_object(self):
         return get_object_or_404(Artists, user=self.request.user)
