@@ -1,7 +1,9 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from django.contrib.auth.forms import UserCreationForm, forms
+from django.forms.models import ModelForm
 from .models import Artists, User
+
 
 class CreateArtistForm(UserCreationForm):
     error_messages = {
@@ -17,7 +19,7 @@ class CreateArtistForm(UserCreationForm):
         if User.objects.filter(email=email).count() > 0:
             raise forms.ValidationError(
                 self.error_messages['same_email'],
-                code = 'same_email',
+                code='same_email',
             )
         return email
 
@@ -31,3 +33,45 @@ class CreateArtistForm(UserCreationForm):
         return user
 
 
+class UpdateArtistForm(ModelForm):
+    error_messages = {
+        'same_email': "L'email est déjà utilisé.",
+        'same_username': "Le nom d'utilisateur est déjà utilisé"
+    }
+    username = forms.RegexField(label=("Nom utilisateur"), max_length=100,
+                                regex=r'^[a-zA-Z0-9 _]+$',
+                                error_message=("Ce champs ne doit contenir que des lettres et/ou des chiffres."))
+    email = forms.EmailField()
+
+    class Meta:
+        model = Artists
+        exclude = ['user']
+
+    def check_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(
+                self.error_messages['same_email'],
+                code='same_email'
+            )
+        return email
+
+    def check_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).count() > 0:
+            raise forms.ValidationError(
+                self.error_messages['same_username'],
+                code='same_username'
+            )
+        return username
+
+    def save(self):
+        artist = super(UpdateArtistForm, self).save(commit=False)
+        user = User.objects.get(username=artist.user.username)
+        if artist.user.username != self.cleaned_data.get('username'):
+            user.username = self.check_username()
+        if artist.user.email != self.cleaned_data.get('email'):
+            user.email = self.check_email()
+        user.save()
+        artist.save()
+        return artist
