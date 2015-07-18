@@ -53,3 +53,8 @@ def artist_login(request):
 def artist_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def artist_delete(request):
+    user = User.objects.get(username=request.user.username)
+    user.delete()
+    return HttpResponseRedirect('/')
