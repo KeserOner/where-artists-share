@@ -1,8 +1,8 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
 from .form import CreateArtistForm, UpdateArtistForm, Artists, User
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
 
 
@@ -10,6 +10,15 @@ class CreateArtistView(CreateView):
     template_name = 'register.html'
     form_class = CreateArtistForm
     success_url = '/'
+
+    def form_valid(self, form):
+        valid = super(CreateArtistView, self).form_valid(form)
+        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
+        new_user = authenticate(username=username, password=password)
+        login(self.request, new_user)
+        return valid
+
+
 
 
 class UpdateArtistView(UpdateView):
