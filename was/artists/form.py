@@ -8,6 +8,7 @@ from .models import Artists, User
 class CreateArtistForm(UserCreationForm):
     error_messages = {
         'same_email': "L'email est déjà utilisé.",
+        'password_mismatch': "Les mots de passe ne correspondent pas."
     }
 
     class Meta:
@@ -22,6 +23,16 @@ class CreateArtistForm(UserCreationForm):
                 code='same_email',
             )
         return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
 
     def save(self, commit=True):
         user = super(CreateArtistForm, self).save(commit=False)
