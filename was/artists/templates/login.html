@@ -1,9 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Se connecter" />
-
-</form>
+<div class="row">
+  <form class="col s6 offset-s3" action="" method="post">{% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="row">
+      <div class="card-panel card-error red lighten-4 col s12">
+        <span class="red-text text-darken-4">{{ form.non_field_errors }}</span>
+      </div>
+    </div>
+    {% endif %}
+    <div class="card-panel">
+      <div class="row">
+        <div class="input-field col s12">
+          {{ form.username }}
+          <label for="id_username">Username</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          {{ form.password }}
+          <label for="id_password1">Password</label>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn waves-effect waves-light teal darken-3" type="submit" name="action">Sign in</button>
+      </div>
+    </div>
+  </form>
+</div>
 {% endblock %}
