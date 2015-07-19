@@ -14,14 +14,13 @@
     <title>{% block title %}Where Artists Share{% endblock %}</title>
   </head>
 
-  <body>
-      <img class="banner" src="{% static 'img/banner.jpg' %}">
+  <div class="banner-div"><img class="banner" src="{% static 'img/banner.jpg' %}"></div>
       <nav class="nav-on-image">
         <div class="nav-wrapper teal darken-3">
-          <a href="#" class="brand-logo">WAS</a>
+          <a href="{% url 'homepage' %}" class="brand-logo">WAS</a>
           {% block nav %}
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/">Home</a></li>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
             <!-- TODO -->
             {% if user.is_anonymous %}
             <li><a href="{% url 'register_user' %}">Sign up</a></li>
