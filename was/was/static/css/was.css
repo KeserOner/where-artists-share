@@ -1,0 +1,15 @@
+.banner {
+    width: 100%
+}
+
+.card-error {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.nav-on-image {
+    margin-top:-35px;
+    margin-bottom: 25px;
+}
