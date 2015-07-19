@@ -7,7 +7,7 @@ from .models import Artists, User
 
 class CreateArtistForm(UserCreationForm):
     error_messages = {
-        'same_email': "L'email est déjà utilisé.",
+        'same_email': "Email already taken.",
     }
 
     class Meta:
@@ -35,12 +35,12 @@ class CreateArtistForm(UserCreationForm):
 
 class UpdateArtistForm(ModelForm):
     error_messages = {
-        'same_email': "L'email est déjà utilisé.",
-        'same_username': "Le nom d'utilisateur est déjà utilisé"
+        'same_email': "Email already taken.",
+        'same_username': "Username already taken."
     }
-    username = forms.RegexField(label=("Nom utilisateur"), max_length=100,
+    username = forms.RegexField(label=("username"), max_length=100,
                                 regex=r'^[a-zA-Z0-9 _]+$',
-                                error_message=("Ce champs ne doit contenir que des lettres et/ou des chiffres."))
+                                error_message=("This field must contain only letters or numbers."))
     email = forms.EmailField()
 
     class Meta:
