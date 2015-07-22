@@ -15,9 +15,6 @@ RUN pip install -r /tmp/requirements.txt
 RUN mkdir /where-artists-share
 WORKDIR /where-artists-share
 
-# Migrate
-#ADD * ./
-
 # Exposing port 8000
 EXPOSE 8000
 
