@@ -1,9 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h3 class="teal-text text-darken-3">Upload Photo</h2>
 <div class="row">
-  <form class="col s6 offset-s3" action="" method="post">{% csrf_token %}
-    {{ form }}
+  <form class="col s12" action="#">
+    <div class="row">
+      <div class="input-field col s12">
+        <textarea id="photoDescr" class="materialize-textarea"></textarea>
+        <label for="photoDescr">Photo Description</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="file-field input-field col s12">
+        <input id="photoPath" class="file-path validate" type="text"/>
+        <label for="photoPath">Photo file</label>
+        <div class="btn teal darken-3">
+          <span>Browse...</span>
+          <input type="file" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="btn waves-effect waves-light teal darken-3" type="submit" name="action">Upload Photo</button>
+        <button class="btn waves-effect waves white black-text" type="submit" name="action">Cancel</button>
+      </div>
+    </div>
   </form>
 </div>
 {% endblock %}
