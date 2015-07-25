@@ -1,5 +1,6 @@
 docker-on-windows/bootlocal.sh
 was/artists/migrations/
 was/crew/migrations/
+was/photo/migrations/
 was/db.sqlite3
 *.pyc
