@@ -8,11 +8,9 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def upload_photo_artist(request):
     if request.method == 'POST':
-        form = UploadPhotoForm(data=request.POST)
+        form = UploadPhotoForm(data=request.POST, request=request)
         if form.is_valid():
-            artist = Artists.objects.get(user=request.user)
             form.clean()
-            form.save(artist)
             return HttpResponseRedirect('#')
 
     else:
