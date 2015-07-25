@@ -14,7 +14,8 @@
     <title>{% block title %}Where Artists Share{% endblock %}</title>
   </head>
 
-  <div class="banner-div"><img class="banner" src="{% static 'img/banner.jpg' %}"></div>
+  <body>
+    <div class="banner-div"><img class="banner" src="{% static 'img/banner.jpg' %}"></div>
       <nav class="nav-on-image">
         <div class="nav-wrapper teal darken-3">
           <a href="{% url 'homepage' %}" class="brand-logo">WAS</a>
@@ -32,10 +33,13 @@
           {% endblock %}
         </div>
       </nav>
+    </div>
 
+    <div class="container">
       <section id="content">
         {% block content %}{% endblock %}
       </section>
-    <footer>© Where Artists Share</footer>
+    </div>
   </body>
+  <footer>© Where Artists Share</footer>
 </html>
