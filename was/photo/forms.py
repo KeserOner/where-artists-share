@@ -9,7 +9,7 @@ class UploadPhotoForm(ModelForm):
         fields = ['picture', 'comment']
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
+        self.request = kwargs.pop("request", None)
         super(UploadPhotoForm, self).__init__(*args, **kwargs)
 
     def save(self):
