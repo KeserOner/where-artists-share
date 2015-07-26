@@ -8,13 +8,11 @@ from .models import Photo
 @login_required
 def upload_photo_artist(request):
     if request.method == 'POST':
-        print('nsm')
-        form = UploadPhotoForm(data=request.POST, request=request)
+        form = UploadPhotoForm(request.POST, request.FILES, request=request)
         if form.is_valid():
-            print('nsm2')
             form.clean()
             form.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/photo/upload')
 
     else:
         form = UploadPhotoForm()
