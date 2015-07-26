@@ -19,3 +19,15 @@
     margin-top:-35px;
     margin-bottom: 25px;
 }
+
+.button-upload {
+    position: relative;
+}
+
+.input-file label {
+    left: 155px;
+}
+
+.input-file input[type=text] {
+    width: 83%;
+}

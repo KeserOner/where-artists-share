@@ -1,29 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3 class="teal-text text-darken-3">Upload Photo</h2>
+<h3 class="teal-text text-darken-3">Upload Photo</h3>
 <div class="row">
-  <form class="col s12" action="#">
+  <form class="col s12" action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
     <div class="row">
       <div class="input-field col s12">
-        <textarea id="photoDescr" class="materialize-textarea"></textarea>
-        <label for="photoDescr">Photo Description</label>
+        {{ form.comment }}
+        <label for="id_comment">Photo Description</label>
       </div>
     </div>
     <div class="row">
-      <div class="file-field input-field col s12">
-        <input id="photoPath" class="file-path validate" type="text"/>
-        <label for="photoPath">Photo file</label>
-        <div class="btn teal darken-3">
-          <span>Browse...</span>
-          <input type="file" />
-        </div>
+      <div class="file-field input-field col s12 input-file">
+          <div class="btn teal darken-3 button-upload">
+              <span>Browse...</span>
+              {{ form.picture }}
+           </div>
+           <input id="photoPath" class="file-path validate" type="text" disabled/>
+           <label for="photoPath">Photo file</label>
       </div>
     </div>
     <div class="row">
       <div class="col">
         <button class="btn waves-effect waves-light teal darken-3" type="submit" name="action">Upload Photo</button>
-        <button class="btn waves-effect waves white black-text" type="submit" name="action">Cancel</button>
+        <button class="btn waves-effect waves white black-text" name="action">Cancel</button>
       </div>
     </div>
   </form>
