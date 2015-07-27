@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -29,6 +30,7 @@ ALLOWED_HOSTS = []
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+LOGIN_URL = 'artist_login'
 # Application definition
 
 INSTALLED_APPS = (
@@ -40,7 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'crew',
     'home',
-    'artists'
+    'artists',
+    'photo'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="teal-text text-darken-3">Upload Photo</h3>
+<div class="row">
+  <form class="col s12" action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="row">
+      <div class="input-field col s12">
+        {{ form.comment }}
+        <label for="id_comment">Photo Description</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="file-field input-field col s12 input-file">
+          <div class="btn teal darken-3 button-upload">
+              <span>Browse...</span>
+              {{ form.picture }}
+           </div>
+           <input id="photoPath" class="file-path validate" type="text" disabled/>
+           <label for="photoPath">Photo file</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="btn waves-effect waves-light teal darken-3" type="submit" name="action">Upload Photo</button>
+        <button class="btn waves-effect waves white black-text">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
