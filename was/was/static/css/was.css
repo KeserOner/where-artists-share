@@ -27,3 +27,7 @@
 .input-file input[type=text] {
     width: 83%;
 }
+
+.avatar {
+    height: 300px;
+}
