@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<div class="section">
+  <div class="row">
+    <div class="col s9">
+      <div class="row">
+        <div class="col s12">
+          <h5>Gallus est ut singula multa.</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <label>Biography</label>
+          <p>Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+
+  Hoc inmaturo interitu ipse quoque sui pertaesus excessit e vita aetatis nono anno atque vicensimo cum quadriennio imperasset. natus apud Tuscos in Massa Veternensi, patre Constantio Constantini fratre imperatoris, matreque Galla sorore Rufini et Cerealis, quos trabeae consulares nobilitarunt et praefecturae.
+
+  Nunc vero inanes flatus quorundam vile esse quicquid extra urbis pomerium nascitur aestimant praeter orbos et caelibes, nec credi potest qua obsequiorum diversitate coluntur homines sine liberis Romae.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <label>Signature</label>
+          <p>Praecipitem super Aginatium enim enim fama Aginatium explanare ut quae pertinacior priscis ad nec priscis causam iam fides quae a nobilem inpulit documentorum a est priscis fides iam causam ut.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col s3">
+      <img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4">
+      <div class="center-align">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Update Account" href="#">
+          <i class="mdi mdi-account"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="center-align">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Account" href="#">
+          <i class="mdi mdi-account-remove"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="center-align">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="#">
+          <i class="mdi mdi-camera"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
