@@ -19,13 +19,21 @@
       <div class="row">
         <div class="col s12">
           <label>Biography</label>
-          <p>{{ artist.artist_bio }}</p>
+            {% if artist.artist_bio %}
+                <p>{{ artist.artist_bio }}</p>
+            {% else %}
+                <p>A little story about you.</p>
+            {% endif %}
         </div>
       </div>
       <div class="row">
         <div class="col s12">
           <label>Signature</label>
-          <p>{{ artist.artist_signature }}</p>
+            {% if artist.artist_signature %}
+                <p>{{ artist.artist_signature }}</p>
+            {% else %}
+                <p>Some badass words you want to say</p>
+            {% endif %}
         </div>
       </div>
     </div>
