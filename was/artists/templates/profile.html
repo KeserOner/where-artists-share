@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% if artist.artist_banner %}
-    {% block banner %}
+
+{% block banner %}
+    {% if artist.artist_banner %}
         <img class="banner" src="{{ artist.artist_banner.url }}">
-    {% endblock %}
-{% endif %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
 
 {% block content %}
 <div class="section">
