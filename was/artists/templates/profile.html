@@ -28,7 +28,11 @@
       </div>
     </div>
     <div class="col s3">
-      <img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
+      {% if artist.artist_image %}
+        <img class="avatar secondary-content" src="{{ artist.artist_image.url }}">
+      {% else %}
+        <img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
+      {% endif %}
     </div>
   </div>
   <div class="row">

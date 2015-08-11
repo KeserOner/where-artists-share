@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
@@ -47,14 +48,22 @@ def artist_login(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'login.html', {'form' : form})
+    return render(request, 'login.html', {'form': form})
 
 
 def artist_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+
 def artist_delete(request):
     user = User.objects.get(username=request.user.username)
     user.delete()
     return HttpResponseRedirect('/')
+
+
+@login_required
+def profile_page(request):
+    artist = Artists.objects.get(user=request.user)
+
+    return render(request, 'profile.html', {'artist': artist})
