@@ -16,7 +16,9 @@
   </head>
 
   <body>
-    <div class="banner-div"><img class="banner" src="{% static 'img/banner.jpg' %}"></div>
+    <div class="banner-div">
+        {% block banner %}<img class="banner" src="{% static 'img/banner.jpg' %}">{% endblock %}
+    </div>
       <nav class="nav-on-image">
         <div class="nav-wrapper teal darken-3">
           <a href="{% url 'homepage' %}" class="brand-logo">WAS</a>
