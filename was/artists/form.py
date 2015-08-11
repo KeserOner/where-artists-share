@@ -8,7 +8,8 @@ from .models import Artists, User
 class CreateArtistForm(UserCreationForm):
     error_messages = {
         'same_email': "Email already taken.",
-        'password_mismatch': "Passwords mismatch."
+        'password_mismatch': "Passwords mismatch.",
+        'required_email': "Email is required"
     }
 
     class Meta:
@@ -22,6 +23,13 @@ class CreateArtistForm(UserCreationForm):
                 self.error_messages['same_email'],
                 code='same_email',
             )
+
+        if not email:
+            raise forms.ValidationError(
+                self.error_messages['required_email'],
+                code='required_email',
+            )
+
         return email
 
     def clean_password2(self):
