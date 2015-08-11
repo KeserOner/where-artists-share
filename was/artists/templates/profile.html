@@ -38,21 +38,21 @@
   <div class="row">
     <div class="col s4">
       <div class="center-align">
-        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Update Account" href="#">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Update Account" href="{% url 'update_artist' %}">
           <i class="mdi mdi-account"></i>
         </a>
       </div>
     </div>
     <div class="col s4">
       <div class="center-align">
-        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Account" href="#">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Account" href="{% url 'delete_user' %}">
           <i class="mdi mdi-account-remove"></i>
         </a>
       </div>
     </div>
     <div class="col s4">
       <div class="center-align">
-        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="#">
+        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="{% url 'upload_photo_artist' %}">
           <i class="mdi mdi-camera"></i>
         </a>
       </div>
