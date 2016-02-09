@@ -2,6 +2,7 @@ from django.forms.models import ModelForm
 from .models import Photo
 from artists.models import Artists
 
+
 class UploadPhotoForm(ModelForm):
 
     class Meta:

@@ -2,9 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
-from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
+
+from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+from photo.models import Photo
 
 
 class CreateArtistView(CreateView):
@@ -20,12 +23,10 @@ class CreateArtistView(CreateView):
         return valid
 
 
-
-
 class UpdateArtistView(UpdateView):
     template_name = 'update.html'
     form_class = UpdateArtistForm
-    success_url = '/'
+    success_url = '/artist/profile'
 
     def get_initial(self):
         initial = {}
@@ -44,7 +45,7 @@ def artist_login(request):
         if form.is_valid():
             form.clean()
             login(request, form.user_cache)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/artist/profile')
     else:
         form = AuthenticationForm()
 
@@ -65,5 +66,8 @@ def artist_delete(request):
 @login_required
 def profile_page(request):
     artist = Artists.objects.get(user=request.user)
-
-    return render(request, 'profile.html', {'artist': artist})
+    photos = Photo.objects.filter(artist=artist)
+    return render(request, 'profile.html', {
+                  'artist': artist,
+                  'photos': photos,
+                  })
