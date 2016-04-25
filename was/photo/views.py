@@ -24,7 +24,7 @@ def upload_photo_artist(request):
     else:
         response = form.errors.as_json()
         return HttpResponse(
-            json.dumps(response),
+            response,
             content_type='application/json'
         )
 

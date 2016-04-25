@@ -43,10 +43,7 @@ $(document).ready(function(){
             processData: false,
             contentType: false,
             success: function(data) {
-                if(data['code']== 1) {
-                    location.reload();
-                }
-                else {
+                if(data['code']!= 1) {
                     alert(data);
                 }
             },
