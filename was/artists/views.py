@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 
 from .form import CreateArtistForm, UpdateArtistForm, Artists, User
 from photo.models import Photo
-
+from photo.forms import UploadPhotoForm
 
 class CreateArtistView(CreateView):
     template_name = 'register.html'
@@ -67,7 +67,9 @@ def artist_delete(request):
 def profile_page(request):
     artist = Artists.objects.get(user=request.user)
     photos = Photo.objects.filter(artist=artist)
+    form = UploadPhotoForm()
     return render(request, 'profile.html', {
                   'artist': artist,
                   'photos': photos,
+                  'form': form,
                   })

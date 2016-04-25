@@ -7,6 +7,9 @@
     <link type="text/css" rel="stylesheet" href="{% static 'css/was.css' %}"/>
     <link type="text/css" rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}" media="all" />
 
+    {% block extra_css %}
+    {% endblock %}
+
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/materialize.min.js' %}"></script>
     <script src="{% static 'js/jquery.poptrox.min.js' %}"></script>
@@ -14,6 +17,9 @@
     <script src="{% static 'js/skel-viewport.min.js' %}"></script>
     <script src="{% static 'js/util.js' %}"></script>
     <script src="{% static 'js/parallelism.js' %}"></script>
+
+    {% block extra_js %}
+    {% endblock %}
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
