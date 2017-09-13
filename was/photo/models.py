@@ -13,6 +13,7 @@ class Photo(models.Model):
 class Album(models.Model):
     title = models.CharField(max_length=255,
                              unique=True)
+    artist = models.ForeignKey('artists.Artists')
     create_date = models.DateField(auto_now_add=True)
     last_update = models.DateField(auto_now=True)
 

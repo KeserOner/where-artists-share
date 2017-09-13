@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
             name='Album',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('artist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='artists.Artists')),
                 ('title', models.CharField(max_length=255, unique=True)),
                 ('create_date', models.DateField(auto_now_add=True)),
                 ('last_update', models.DateField(auto_now=True)),
