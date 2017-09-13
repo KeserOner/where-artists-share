@@ -40,10 +40,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crew',
-    'home',
-    'artists',
-    'photo'
+    'crew.apps.CrewConfig',
+    'home.apps.HomeConfig',
+    'artists.apps.ArtistsConfig',
+    'photo.apps.PhotoConfig'
 )
 
 MIDDLEWARE_CLASSES = (

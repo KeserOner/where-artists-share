@@ -57,9 +57,14 @@ class UpdateArtistForm(ModelForm):
         'same_email': "Email already taken.",
         'same_username': "Username already taken."
     }
-    username = forms.RegexField(label=("username"), max_length=100,
+    username = forms.RegexField(label=("username"), 
+                                max_length=100,
                                 regex=r'^[a-zA-Z0-9 _]+$',
-                                error_message=("This field must contain only letters or numbers."))
+                                error_messages={
+                                    'invalid': "This field must contain only letters or numbers."
+                                }
+                               )
+                                
     email = forms.EmailField()
 
     class Meta:
