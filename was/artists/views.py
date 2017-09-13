@@ -1,10 +1,14 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
-from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
 
+from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+from photo.models import Photo
+from photo.forms import UploadPhotoForm
 
 class CreateArtistView(CreateView):
     template_name = 'register.html'
@@ -19,12 +23,10 @@ class CreateArtistView(CreateView):
         return valid
 
 
-
-
 class UpdateArtistView(UpdateView):
     template_name = 'update.html'
     form_class = UpdateArtistForm
-    success_url = '/'
+    success_url = '/artist/profile'
 
     def get_initial(self):
         initial = {}
@@ -43,18 +45,31 @@ def artist_login(request):
         if form.is_valid():
             form.clean()
             login(request, form.user_cache)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/artist/profile')
     else:
         form = AuthenticationForm()
 
-    return render(request, 'login.html', {'form' : form})
+    return render(request, 'login.html', {'form': form})
 
 
 def artist_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+
 def artist_delete(request):
     user = User.objects.get(username=request.user.username)
     user.delete()
     return HttpResponseRedirect('/')
+
+
+@login_required
+def profile_page(request):
+    artist = Artists.objects.get(user=request.user)
+    photos = Photo.objects.filter(artist=artist)
+    form = UploadPhotoForm()
+    return render(request, 'profile.html', {
+                  'artist': artist,
+                  'photos': photos,
+                  'form': form,
+                  })

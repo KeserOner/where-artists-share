@@ -1,22 +1,33 @@
-from django.shortcuts import render
 from .forms import UploadPhotoForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from .models import Photo
+import json
 
 
 @login_required
+@require_POST
 def upload_photo_artist(request):
-    if request.method == 'POST':
-        form = UploadPhotoForm(request.POST, request.FILES, request=request)
-        if form.is_valid():
-            form.clean()
-            form.save()
-            return HttpResponseRedirect('/photo/upload')
-
+    form = UploadPhotoForm(request.POST, request.FILES, request=request)
+    if form.is_valid():
+        form.clean()
+        form.save()
+        response = {
+            'code': 1,
+            'message': 'success',
+        }
+        return HttpResponse(
+            json.dumps(response),
+            content_type='application/json'
+        )
     else:
-        form = UploadPhotoForm()
-        return render(request, 'upload_photo.html', {'form': form})
+        response = form.errors.as_json()
+        return HttpResponse(
+            response,
+            content_type='application/json'
+        )
+
 
 @login_required
 def delete_photo_artist(request, photo_id):
