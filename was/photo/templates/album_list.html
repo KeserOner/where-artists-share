@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block banner %}
+    {% if artist.artist_banner %}
+        <img class="banner" src="{{ artist.artist_banner.url }}">
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+	{% for album, value in albums.items %}
+	  <div>
+			<label>{{ album }}</label>
+      <a href="{% url 'album_detail' pk=value.1 %}">
+			  {% if value.0 %}
+				  <img src="{{ value.0.picture.url }}">
+			  {% else %}
+				  <img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
+			  {% endif %}
+      </a>
+		</div>	
+	{% endfor %}
+{% endblock %}
