@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_js %}
+    <script src="{% static 'js/upload_photo.js' %}"></script>
+{% endblock %}
+
+{% block banner %}
+    {% if artist.artist_banner %}
+        <img class="banner" src="{{ artist.artist_banner.url }}">
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="center-align">
+    <a class="modal-trigger waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="#modal_form_photo">
+      <i class="mdi mdi-camera"></i>
+    </a>
+  </div>
+
+{% include 'upload_photo.html' %}
+
+{% endblock %}
+

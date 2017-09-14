@@ -13,11 +13,13 @@
 	{% for album, value in albums.items %}
 	  <div>
 			<label>{{ album }}</label>
-			{% if value.0 %}
-				<img src="{{ value.0.picture.url }}">
-			{% else %}
-				<img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
-			{% endif %}
+      <a href="{% url 'album_detail' pk=value.1 %}">
+			  {% if value.0 %}
+				  <img src="{{ value.0.picture.url }}">
+			  {% else %}
+				  <img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
+			  {% endif %}
+      </a>
 		</div>	
 	{% endfor %}
 {% endblock %}
