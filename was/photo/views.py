@@ -1,8 +1,9 @@
-from .forms import UploadPhotoForm
+from .forms import UploadPhotoForm, CreateAlbumForm
 from django.http import HttpResponse, Http404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
+from django.core.urlresolvers import reverse
 from artists.models import Artists
 from .models import Photo, Album, AlbumPhotoRelation
 import json
@@ -57,3 +58,20 @@ class AlbumListView(ListView):
             queryset[album.title] = (photo, album.pk)
 
         return queryset
+
+
+class CreateAlbumView(CreateView):
+
+    model = Album
+    form_class = CreateAlbumForm
+    template_name = 'create_album.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(CreateAlbumView, self).get_form_kwargs()
+        kwargs.update({'request': self.request})
+
+        return kwargs
+
+    def get_success_url(self):
+        user_pk = self.request.user.pk
+        return reverse('list_artist_albums', kwargs={'user_pk': user_pk})

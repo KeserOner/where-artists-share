@@ -10,14 +10,9 @@
 {% endblock %}
 
 {% block content %}
-	{% for album, value in albums.items %}
-	  <div>
-			<label>{{ album }}</label>
-			{% if value.0 %}
-				<img src="{{ value.0.picture.url }}">
-			{% else %}
-				<img class="avatar secondary-content" src="{% static 'img/test.jpg' %}">
-			{% endif %}
-		</div>	
-	{% endfor %}
+  <form method="post">
+  {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+  </form>
 {% endblock %}
