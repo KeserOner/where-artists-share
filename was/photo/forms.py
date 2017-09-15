@@ -1,6 +1,8 @@
 from django.forms.models import ModelForm
-from .models import Photo, Album, AlbumPhotoRelation
+
 from artists.models import Artists
+
+from .models import Photo, Album, AlbumPhotoRelation
 
 
 class UploadPhotoForm(ModelForm):
@@ -15,15 +17,18 @@ class UploadPhotoForm(ModelForm):
 
     def save(self):
         photo = super(UploadPhotoForm, self).save(commit=False)
+
         artist = Artists.objects.get(user=self.request.user)
         photo.artist = artist
         photo.save()
+
         if 'album_pk' in self.data:
             album = Album.objects.get(pk=self.data['album_pk'])
             AlbumPhotoRelation.objects.create(
                 photo=photo,
                 album=album
             )
+
         return photo
 
 
@@ -39,6 +44,7 @@ class CreateAlbumForm(ModelForm):
 
     def save(self):
         album = super(CreateAlbumForm, self).save(commit=False)
+
         artist = Artists.objects.get(user=self.request.user)
         album.artist = artist
         album.save()

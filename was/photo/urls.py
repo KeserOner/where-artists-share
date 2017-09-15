@@ -1,7 +1,13 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from .views import (upload_photo_artist, delete_photo_artist,
-                    AlbumListView, CreateAlbumView, AlbumView)
+
+from .views import (
+    upload_photo_artist,
+    delete_photo_artist,
+    AlbumListView,
+    CreateAlbumView,
+    AlbumView
+)
 
 
 urlpatterns = [
