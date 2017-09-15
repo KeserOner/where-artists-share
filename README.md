@@ -1,6 +1,6 @@
 # where-artists-share
 
-Art website in django 1.8.2 / python 3.4
+Art website in django 1.11.5 / python 3.5
 
 ## Install
 
