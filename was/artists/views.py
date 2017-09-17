@@ -49,6 +49,34 @@ class UpdateArtistView(UpdateView):
         return reverse('profile_page', kwargs={'user_pk': self.object.user.pk})
 
 
+class ProfilePage(DetailView):
+    model = Artists
+    context_object_name = 'artist'
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfilePage, self).get_context_data(**kwargs)
+        photos = Photo.objects.filter(artist=self.object)
+        context['photos'] = photos
+
+        if self.request.user == self.object.user:
+            context['is_user'] = True
+            context['form'] = UploadPhotoForm()
+        else:
+            context['is_user'] = False
+
+        return context
+
+    def get_object(self):
+        return self.get_queryset()
+
+    def get_queryset(self):
+        user_pk = self.kwargs.get('user_pk', '')
+        artist = get_object_or_404(Artists, user__pk=user_pk)
+
+        return artist
+
+
 def artist_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -95,31 +123,3 @@ def follow_artist(request, **kwargs):
             '/artist/profile'
         )
     )
-
-
-class ProfilePage(DetailView):
-    model = Artists
-    context_object_name = 'artist'
-    template_name = 'profile.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfilePage, self).get_context_data(**kwargs)
-        photos = Photo.objects.filter(artist=self.object)
-        context['photos'] = photos
-
-        if self.request.user == self.object.user:
-            context['is_user'] = True
-            context['form'] = UploadPhotoForm()
-        else:
-            context['is_user'] = False
-
-        return context
-
-    def get_object(self):
-        return self.get_queryset()
-
-    def get_queryset(self):
-        user_pk = self.kwargs.get('user_pk', '')
-        artist = get_object_or_404(Artists, user__pk=user_pk)
-
-        return artist
