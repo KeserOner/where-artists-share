@@ -52,29 +52,41 @@
       {% endif %}
     </div>
   </div>
-  <div class="row">
-    <div class="col s4">
-      <div class="center-align">
-        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Update Account" href="{% url 'update_artist' %}">
-          <i class="mdi mdi-account"></i>
-        </a>
+  {% if is_user %} 
+    <div class="row">
+      <div class="col s4">
+        <div class="center-align">
+          <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Update Account" href="{% url 'update_artist' %}">
+            <i class="mdi mdi-account"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="center-align">
+          <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Account" href="{% url 'delete_user' %}">
+            <i class="mdi mdi-account-remove"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="center-align">
+          <a class="modal-trigger waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="#modal_form_photo">
+            <i class="mdi mdi-camera"></i>
+          </a>
+        </div>
       </div>
     </div>
-    <div class="col s4">
-      <div class="center-align">
-        <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Account" href="{% url 'delete_user' %}">
-          <i class="mdi mdi-account-remove"></i>
-        </a>
+  {% else %}
+    <div class="row">
+      <div class="col s4">
+        <div class="center-align">
+          <a class="waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Follow" href="{% url 'follow_artist' artist_pk=artist.pk %}">
+            <i class="mdi mdi-arrow-up-bold-circle-outline "></i>
+          </a>
+        </div>
       </div>
     </div>
-    <div class="col s4">
-      <div class="center-align">
-        <a class="modal-trigger waves-effect waves-light btn-floating btn-large teal darken-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Upload Photo" href="#modal_form_photo">
-          <i class="mdi mdi-camera"></i>
-        </a>
-      </div>
-    </div>
-  </div>
+  {% endif %}
   <div class="row">
     <div id="wrapper">
       <div id="parallelism">
