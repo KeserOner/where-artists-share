@@ -2,8 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from photo.models import Photo
 from photo.forms import UploadPhotoForm
@@ -30,7 +32,6 @@ class CreateArtistView(CreateView):
 class UpdateArtistView(UpdateView):
     template_name = 'update.html'
     form_class = UpdateArtistForm
-    success_url = '/artist/profile'
 
     def get_initial(self):
         initial = {}
@@ -44,6 +45,41 @@ class UpdateArtistView(UpdateView):
     def get_object(self):
         return get_object_or_404(Artists, user=self.request.user)
 
+    def get_success_url(self):
+        return reverse('profile_page', kwargs={'user_pk': self.object.user.pk})
+
+
+class ProfilePage(DetailView):
+    model = Artists
+    context_object_name = 'artist'
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfilePage, self).get_context_data(**kwargs)
+        photos = Photo.objects.filter(artist=self.object)
+        context['photos'] = photos
+
+        if self.request.user == self.object.user:
+            context['is_user'] = True
+            context['form'] = UploadPhotoForm()
+        else:
+            context['is_user'] = False
+            # get current artist to see if he's following the artist he's
+            # watching
+            cur_art = Artists.objects.get(user=self.request.user)
+            context['followed'] = self.object in cur_art.artists_followed.all()
+
+        return context
+
+    def get_object(self):
+        return self.get_queryset()
+
+    def get_queryset(self):
+        user_pk = self.kwargs.get('user_pk', '')
+        artist = get_object_or_404(Artists, user__pk=user_pk)
+
+        return artist
+
 
 def artist_login(request):
     if request.method == 'POST':
@@ -52,7 +88,12 @@ def artist_login(request):
             form.clean()
             login(request, form.user_cache)
 
-            return HttpResponseRedirect('/artist/profile')
+            return HttpResponseRedirect(
+                reverse(
+                    'profile_page',
+                    kwargs={'user_pk': form.user_cache.pk}
+                )
+             )
     else:
         form = AuthenticationForm()
 
@@ -73,17 +114,19 @@ def artist_delete(request):
 
 
 @login_required
-def profile_page(request):
+def follow_artist(request, **kwargs):
     artist = Artists.objects.get(user=request.user)
-    photos = Photo.objects.filter(artist=artist)
-    form = UploadPhotoForm()
+    artist_pk = kwargs.get('artist_pk', '')
+    artist_followed = get_object_or_404(Artists, pk=artist_pk)
 
-    return render(
-        request,
-        'profile.html',
-        {
-            'artist': artist,
-            'photos': photos,
-            'form': form
-        }
+    if artist_followed in artist.artists_followed.all():
+        artist.artists_followed.remove(artist_followed)
+    else:
+        artist.artists_followed.add(artist_followed)
+
+    return HttpResponseRedirect(
+        reverse(
+            'profile_page',
+            kwargs={'user_pk': artist_followed.user.pk}
+        )
     )
