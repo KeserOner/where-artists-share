@@ -29,5 +29,13 @@ class Artists(models.Model):
         verbose_name='Artist\'s signature'
     )
 
+    artist_followed = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        related_name='artists_followed',
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return 'Profil de %s' % self.user.username
