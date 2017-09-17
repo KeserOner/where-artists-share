@@ -64,6 +64,10 @@ class ProfilePage(DetailView):
             context['form'] = UploadPhotoForm()
         else:
             context['is_user'] = False
+            # get current artist to see if he's following the artist he's
+            # watching
+            cur_art = Artists.objects.get(user=self.request.user)
+            context['followed'] = self.object in cur_art.artists_followed.all()
 
         return context
 
@@ -115,11 +119,14 @@ def follow_artist(request, **kwargs):
     artist_pk = kwargs.get('artist_pk', '')
     artist_followed = get_object_or_404(Artists, pk=artist_pk)
 
-    artist.artists_followed.add(artist_followed)
+    if artist_followed in artist.artists_followed.all():
+        artist.artists_followed.remove(artist_followed)
+    else:
+        artist.artists_followed.add(artist_followed)
 
     return HttpResponseRedirect(
-        request.META.get(
-            'HTTP_REFERER',
-            '/artist/profile'
+        reverse(
+            'profile_page',
+            kwargs={'user_pk': artist_followed.user.pk}
         )
     )
