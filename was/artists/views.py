@@ -2,20 +2,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
 from django.views.generic.edit import UpdateView
-from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from photo.models import Photo
-from photo.forms import UploadPhotoForm
-
 from .form import UpdateArtistForm, Artists, User
-from .serializers import SignupArtistSerializer, SigninArtistSerializer
+from .serializers import (
+    SignupArtistSerializer,
+    SigninArtistSerializer,
+    ArtistSerializer
+)
 
 
 class CreateArtistAPIView(CreateAPIView):
@@ -46,6 +46,14 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class ProfileView(RetrieveAPIView):
+
+    serializer_class = ArtistSerializer
+    queryset = Artists.objects.filter(user__is_active=True)
+    lookup_field = 'user__username'
+    lookup_url_kwarg = 'username'
+
+
 class UpdateArtistView(UpdateView):
     template_name = 'update.html'
     form_class = UpdateArtistForm
@@ -64,38 +72,6 @@ class UpdateArtistView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile_page', kwargs={'user_pk': self.object.user.pk})
-
-
-class ProfilePage(DetailView):
-    model = Artists
-    context_object_name = 'artist'
-    template_name = 'profile.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfilePage, self).get_context_data(**kwargs)
-        photos = Photo.objects.filter(artist=self.object)
-        context['photos'] = photos
-
-        if self.request.user == self.object.user:
-            context['is_user'] = True
-            context['form'] = UploadPhotoForm()
-        else:
-            context['is_user'] = False
-            # get current artist to see if he's following the artist he's
-            # watching
-            cur_art = Artists.objects.get(user=self.request.user)
-            context['followed'] = self.object in cur_art.artists_followed.all()
-
-        return context
-
-    def get_object(self):
-        return self.get_queryset()
-
-    def get_queryset(self):
-        user_pk = self.kwargs.get('user_pk', '')
-        artist = get_object_or_404(Artists, user__pk=user_pk)
-
-        return artist
 
 
 def artist_delete(request):

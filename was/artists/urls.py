@@ -4,9 +4,9 @@ from .views import (
     CreateArtistAPIView,
     LoginView,
     LogoutView,
+    ProfileView,
     UpdateArtistView,
     artist_delete,
-    ProfilePage,
     follow_artist
 )
 
@@ -17,8 +17,9 @@ urlpatterns = [
     url(r'^update/?$', UpdateArtistView.as_view(), name='update_artist'),
     url(r'^delete/?$', artist_delete, name='delete_user'),
     url(
-        r'^profile/(?P<user_pk>\d+)/$',
-        ProfilePage.as_view(),
-        name='profile_page'),
+        r'^(?P<username>[A-Za-z _-]+)/$',
+        ProfileView.as_view(),
+        name='profile_page'
+    ),
     url(r'^follow/(?P<artist_pk>\d+)/$', follow_artist, name='follow_artist')
 ]

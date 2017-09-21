@@ -109,3 +109,23 @@ class SigninArtistSerializer(serializers.Serializer):
 
     def get_user(self):
         return self._user
+
+
+class ArtistSerializer(serializers.ModelSerializer):
+
+    user = serializers.CharField(
+        source='user.username',
+        read_only=True
+    )
+
+    email = serializers.CharField(
+        source='user.email',
+        read_only=True
+    )
+
+    class Meta:
+        model = Artists
+        fields = (
+            'user', 'artist_image', 'artist_banner',
+            'artist_bio', 'artist_signature', 'email'
+        )
