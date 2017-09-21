@@ -98,7 +98,8 @@ class SigninArtistSerializer(serializers.Serializer):
             except ObjectDoesNotExist:
                 raise serializers.ValidationError('no user with this email \
                                                   or username')
-        auth_user = authenticate(username=user.username, password=data.get('password'))
+        auth_user = authenticate(username=user.username,
+                                 password=data.get('password'))
 
         if not auth_user:
             raise serializers.ValidationError('invalid password')
