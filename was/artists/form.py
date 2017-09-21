@@ -1,59 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm, forms
+from django.contrib.auth.forms import forms
 from django.forms.models import ModelForm
 
 from .models import Artists, User
-
-
-class CreateArtistForm(UserCreationForm):
-    error_messages = {
-        'same_email': "Email already taken.",
-        'password_mismatch': "Passwords mismatch.",
-        'required_email': "Email is required"
-    }
-
-    class Meta:
-        model = User
-        fields = ('username', 'email')
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-
-        if User.objects.filter(email=email).count() > 0:
-            raise forms.ValidationError(
-                self.error_messages['same_email'],
-                code='same_email',
-            )
-
-        if not email:
-            raise forms.ValidationError(
-                self.error_messages['required_email'],
-                code='required_email',
-            )
-
-        return email
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError(
-                self.error_messages['password_mismatch'],
-                code='password_mismatch',
-            )
-
-        return password2
-
-    def save(self, commit=True):
-        user = super(CreateArtistForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
-
-        if commit:
-            user.save()
-            artist = Artists(user=user)
-            artist.save()
-
-        return user
 
 
 class UpdateArtistForm(ModelForm):

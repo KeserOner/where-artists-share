@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from photo.models import Photo
 from photo.forms import UploadPhotoForm
 
-from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+from .form import UpdateArtistForm, Artists, User
 from .serializers import SignupArtistSerializer, SigninArtistSerializer
 
 
@@ -36,22 +36,6 @@ class LoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             login(request, serializer.get_user())
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CreateArtistView(CreateView):
-    template_name = 'register.html'
-    form_class = CreateArtistForm
-    success_url = '/'
-
-    def form_valid(self, form):
-        valid = super(CreateArtistView, self).form_valid(form)
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-
-        new_user = authenticate(username=username, password=password)
-        login(self.request, new_user)
-
-        return valid
 
 
 class UpdateArtistView(UpdateView):
