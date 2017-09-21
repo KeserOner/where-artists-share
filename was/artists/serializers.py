@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 from artists.models import Artists
 
 
-class CreateArtistsSerializer(serializers.Serializer):
+class SignupArtistSerializer(serializers.Serializer):
 
     username = serializers.RegexField(
         r'^[a-zA-Z0-9_ -]+$',
@@ -19,8 +19,8 @@ class CreateArtistsSerializer(serializers.Serializer):
             )
         ],
         error_messages={
-            'invalid': 'username must contain only letters, spaces,\
-            underscores and dashes',
+            'invalid': 'username must contain only letters, \
+                        spaces, underscores and dashes',
             'min_length': 'username must be at least 3 character long'
         }
     )
@@ -37,11 +37,13 @@ class CreateArtistsSerializer(serializers.Serializer):
 
     password1 = serializers.CharField(
         required=True,
+        write_only=True,
         style={'input_type': 'password'}
     )
 
     password2 = serializers.CharField(
         required=True,
+        write_only=True,
         style={'input_type': 'password'}
     )
 
@@ -53,10 +55,17 @@ class CreateArtistsSerializer(serializers.Serializer):
 
     def create(self, validated_data):
 
+        password = validated_data['password1']
+        username = validated_data['username']
         user = User.objects.create_user(
-            validated_data['username'],
+            username,
             email=validated_data['email'],
-            password=validated_data['password1']
         )
 
-        return Artists.objects.create(user=user)
+        user.set_password(password)
+        user.is_active = True
+        user.save()
+
+        Artists.objects.create(user=user)
+
+        return user

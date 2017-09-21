@@ -1,16 +1,28 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
-from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+
+from rest_framework.generics import CreateAPIView
 
 from photo.models import Photo
 from photo.forms import UploadPhotoForm
 
 from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+from .serializers import SignupArtistSerializer
+
+
+class CreateArtistAPIView(CreateAPIView):
+
+    serializer_class = SignupArtistSerializer
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        login(self.request, user)
 
 
 class CreateArtistView(CreateView):
