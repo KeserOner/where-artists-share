@@ -1,19 +1,21 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from photo.models import Photo
 from photo.forms import UploadPhotoForm
 
 from .form import CreateArtistForm, UpdateArtistForm, Artists, User
-from .serializers import SignupArtistSerializer
+from .serializers import SignupArtistSerializer, SigninArtistSerializer
 
 
 class CreateArtistAPIView(CreateAPIView):
@@ -23,6 +25,17 @@ class CreateArtistAPIView(CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         login(self.request, user)
+
+
+class LoginView(APIView):
+
+    serializer_class = SigninArtistSerializer
+
+    def post(self, request):
+        serializer = SigninArtistSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            login(request, serializer.get_user())
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CreateArtistView(CreateView):
@@ -91,25 +104,6 @@ class ProfilePage(DetailView):
         artist = get_object_or_404(Artists, user__pk=user_pk)
 
         return artist
-
-
-def artist_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            form.clean()
-            login(request, form.user_cache)
-
-            return HttpResponseRedirect(
-                reverse(
-                    'profile_page',
-                    kwargs={'user_pk': form.user_cache.pk}
-                )
-             )
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'login.html', {'form': form})
 
 
 def artist_logout(request):

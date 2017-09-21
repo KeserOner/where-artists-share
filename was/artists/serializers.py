@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -69,3 +71,40 @@ class SignupArtistSerializer(serializers.Serializer):
         Artists.objects.create(user=user)
 
         return user
+
+
+class SigninArtistSerializer(serializers.Serializer):
+
+    username = serializers.CharField(required=True)
+
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'}
+    )
+
+    def __init__(self, *args, **kwargs):
+        self._user = None
+        super().__init__(*args, **kwargs)
+
+    def validate(self, data):
+        username = data.get('username')
+
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            try:
+                user = User.objects.get(email=username)
+            except ObjectDoesNotExist:
+                raise serializers.ValidationError('no user with this email \
+                                                  or username')
+        auth_user = authenticate(username=user.username, password=data.get('password'))
+
+        if not auth_user:
+            raise serializers.ValidationError('invalid password')
+
+        self._user = auth_user
+        return data
+
+    def get_user(self):
+        return self._user
