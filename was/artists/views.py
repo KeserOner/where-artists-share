@@ -38,6 +38,14 @@ class LoginView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class LogoutView(APIView):
+
+    def post(self, request):
+        logout(request)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class UpdateArtistView(UpdateView):
     template_name = 'update.html'
     form_class = UpdateArtistForm
@@ -88,12 +96,6 @@ class ProfilePage(DetailView):
         artist = get_object_or_404(Artists, user__pk=user_pk)
 
         return artist
-
-
-def artist_logout(request):
-    logout(request)
-
-    return HttpResponseRedirect('/')
 
 
 def artist_delete(request):

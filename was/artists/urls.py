@@ -3,7 +3,7 @@ from django.conf.urls import url
 from .views import (
     CreateArtistAPIView,
     LoginView,
-    artist_logout,
+    LogoutView,
     UpdateArtistView,
     artist_delete,
     ProfilePage,
@@ -13,7 +13,7 @@ from .views import (
 urlpatterns = [
     url(r'^register/?$', CreateArtistAPIView.as_view(), name='register_user'),
     url(r'^login/?$', LoginView.as_view(), name='artist_login'),
-    url(r'^logout/?$', artist_logout, name='artist_logout'),
+    url(r'^logout/?$', LogoutView.as_view(), name='artist_logout'),
     url(r'^update/?$', UpdateArtistView.as_view(), name='update_artist'),
     url(r'^delete/?$', artist_delete, name='delete_user'),
     url(
