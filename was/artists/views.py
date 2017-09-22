@@ -7,8 +7,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
-    RetrieveAPIView,
-    UpdateAPIView
+    RetrieveUpdateAPIView
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -49,15 +48,7 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ProfileView(RetrieveAPIView):
-
-    serializer_class = ArtistSerializer
-    queryset = Artists.objects.filter(user__is_active=True)
-    lookup_field = 'user__username'
-    lookup_url_kwarg = 'username'
-
-
-class UpdateArtistView(UpdateAPIView):
+class ArtistProfileView(RetrieveUpdateAPIView):
 
     serializer_class = ArtistSerializer
     queryset = Artists.objects.filter(user__is_active=True)
@@ -65,7 +56,9 @@ class UpdateArtistView(UpdateAPIView):
     lookup_url_kwarg = 'username'
 
     def put(self, request, **kwargs):
-        error = {'message': 'this endpoint only accept PATCH method'}
+        error = {
+            'message': 'this endpoint only accept PATCH and GET methods'
+        }
 
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
