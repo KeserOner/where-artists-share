@@ -14,7 +14,11 @@ urlpatterns = [
     url(r'^register/?$', CreateArtistAPIView.as_view(), name='register_user'),
     url(r'^login/?$', LoginView.as_view(), name='artist_login'),
     url(r'^logout/?$', LogoutView.as_view(), name='artist_logout'),
-    url(r'^update/?$', UpdateArtistView.as_view(), name='update_artist'),
+    url(
+        r'^update/(?P<username>[A-Za-z _-]+)/$',
+        UpdateArtistView.as_view(),
+        name='update_artist'
+    ),
     url(r'^delete/?$', artist_delete, name='delete_user'),
     url(
         r'^(?P<username>[A-Za-z _-]+)/$',

@@ -1,16 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
-from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveAPIView,
+    UpdateAPIView
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .form import UpdateArtistForm, Artists, User
+from .form import Artists, User
 from .serializers import (
     SignupArtistSerializer,
     SigninArtistSerializer,
@@ -54,24 +57,17 @@ class ProfileView(RetrieveAPIView):
     lookup_url_kwarg = 'username'
 
 
-class UpdateArtistView(UpdateView):
-    template_name = 'update.html'
-    form_class = UpdateArtistForm
+class UpdateArtistView(UpdateAPIView):
 
-    def get_initial(self):
-        initial = {}
-        user = User.objects.get(username=self.request.user.username)
+    serializer_class = ArtistSerializer
+    queryset = Artists.objects.filter(user__is_active=True)
+    lookup_field = 'user__username'
+    lookup_url_kwarg = 'username'
 
-        initial['username'] = user.username
-        initial['email'] = user.email
+    def put(self, request, **kwargs):
+        error = {'message': 'this endpoint only accept PATCH method'}
 
-        return initial
-
-    def get_object(self):
-        return get_object_or_404(Artists, user=self.request.user)
-
-    def get_success_url(self):
-        return reverse('profile_page', kwargs={'user_pk': self.object.user.pk})
+        return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 def artist_delete(request):

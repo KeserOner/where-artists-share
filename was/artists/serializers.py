@@ -113,14 +113,31 @@ class SigninArtistSerializer(serializers.Serializer):
 
 class ArtistSerializer(serializers.ModelSerializer):
 
-    user = serializers.CharField(
-        source='user.username',
-        read_only=True
+    user = serializers.RegexField(
+        r'^[A-Za-z0-9 _-]+$',
+        min_length=3,
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message='This username is already used'
+            )
+        ],
+        error_messages={
+            'invalid': 'username must contain only letters, \
+                        spaces, underscores and dashes',
+            'min_length': 'username must be at least 3 character long'
+        },
+        source='user.username'
     )
 
-    email = serializers.CharField(
-        source='user.email',
-        read_only=True
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message='This username is already used'
+            )
+        ],
+        source='user.email'
     )
 
     class Meta:
