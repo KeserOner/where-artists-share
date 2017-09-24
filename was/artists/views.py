@@ -12,7 +12,7 @@ from rest_framework.generics import (
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .form import Artists, User
+from .form import Artists
 from .serializers import (
     SignupArtistSerializer,
     SigninArtistSerializer,
@@ -61,13 +61,6 @@ class ArtistProfileView(RetrieveUpdateDestroyAPIView):
         }
 
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-def artist_delete(request):
-    user = User.objects.get(username=request.user.username)
-    user.delete()
-
-    return HttpResponseRedirect('/')
 
 
 @login_required

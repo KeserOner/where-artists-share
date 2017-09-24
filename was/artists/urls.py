@@ -5,7 +5,6 @@ from .views import (
     LoginView,
     LogoutView,
     ArtistProfileView,
-    artist_delete,
     follow_artist
 )
 
@@ -18,7 +17,11 @@ urlpatterns = [
         ArtistProfileView.as_view(),
         name='update_artist'
     ),
-    url(r'^delete/?$', artist_delete, name='delete_user'),
+    url(
+        r'^delete/(?P<username>[A-Za-z _-]+)/$',
+        ArtistProfileView.as_view(),
+        name='delete_user'
+    ),
     url(
         r'^(?P<username>[A-Za-z _-]+)/$',
         ArtistProfileView.as_view(),
