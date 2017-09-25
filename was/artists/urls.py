@@ -5,7 +5,6 @@ from .views import (
     LoginView,
     LogoutView,
     ArtistProfileView,
-    follow_artist
 )
 
 urlpatterns = [
@@ -26,6 +25,5 @@ urlpatterns = [
         r'^(?P<username>[A-Za-z _-]+)/$',
         ArtistProfileView.as_view(),
         name='profile_page'
-    ),
-    url(r'^follow/(?P<artist_pk>\d+)/$', follow_artist, name='follow_artist')
+    )
 ]

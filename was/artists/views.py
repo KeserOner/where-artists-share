@@ -1,8 +1,4 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 
 from rest_framework import status
 from rest_framework.generics import (
@@ -61,22 +57,3 @@ class ArtistProfileView(RetrieveUpdateDestroyAPIView):
         }
 
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-@login_required
-def follow_artist(request, **kwargs):
-    artist = Artists.objects.get(user=request.user)
-    artist_pk = kwargs.get('artist_pk', '')
-    artist_followed = get_object_or_404(Artists, pk=artist_pk)
-
-    if artist_followed in artist.artists_followed.all():
-        artist.artists_followed.remove(artist_followed)
-    else:
-        artist.artists_followed.add(artist_followed)
-
-    return HttpResponseRedirect(
-        reverse(
-            'profile_page',
-            kwargs={'user_pk': artist_followed.user.pk}
-        )
-    )
