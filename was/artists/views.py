@@ -8,8 +8,8 @@ from rest_framework.generics import (
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .form import Artists
 from .serializers import (
+    Artists,
     SignupArtistSerializer,
     SigninArtistSerializer,
     ArtistSerializer
