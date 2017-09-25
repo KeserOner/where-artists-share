@@ -140,9 +140,33 @@ class ArtistSerializer(serializers.ModelSerializer):
         source='user.email'
     )
 
+    artists_followed = serializers.SlugRelatedField(
+        many=True,
+        slug_field='id',
+        queryset=Artists.objects.filter(user__is_active=True)
+    )
+
     class Meta:
         model = Artists
         fields = (
             'user', 'artist_image', 'artist_banner',
-            'artist_bio', 'artist_signature', 'email'
+            'artist_bio', 'artist_signature', 'email',
+            'artists_followed', 'id'
         )
+        read_only_fields = ('id',)
+
+    def update(self, instance, validated_data):
+        artists_followed_qs = validated_data.pop('artists_followed', '')
+        instance = super(ArtistSerializer, self).update(instance,
+                                                        validated_data)
+        if artists_followed_qs:
+            artists_followed = instance.artists_followed.all()
+            for artist in artists_followed_qs:
+                if artist in artists_followed:
+                    instance.artists_followed.remove(artist)
+                else:
+                    instance.artists_followed.add(artist)
+
+            instance.save()
+
+        return instance
