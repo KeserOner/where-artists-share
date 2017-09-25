@@ -1,132 +1,66 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.detail import DetailView
-from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.contrib.auth import login, logout
 
-from photo.models import Photo
-from photo.forms import UploadPhotoForm
+from rest_framework import status
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveUpdateDestroyAPIView
+)
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from .form import CreateArtistForm, UpdateArtistForm, Artists, User
+from permissions import IsAuthenticatedAndIsOwner
 
-
-class CreateArtistView(CreateView):
-    template_name = 'register.html'
-    form_class = CreateArtistForm
-    success_url = '/'
-
-    def form_valid(self, form):
-        valid = super(CreateArtistView, self).form_valid(form)
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-
-        new_user = authenticate(username=username, password=password)
-        login(self.request, new_user)
-
-        return valid
+from .serializers import (
+    Artists,
+    SignupArtistSerializer,
+    SigninArtistSerializer,
+    ArtistSerializer
+)
 
 
-class UpdateArtistView(UpdateView):
-    template_name = 'update.html'
-    form_class = UpdateArtistForm
+class CreateArtistAPIView(CreateAPIView):
 
-    def get_initial(self):
-        initial = {}
-        user = User.objects.get(username=self.request.user.username)
+    serializer_class = SignupArtistSerializer
 
-        initial['username'] = user.username
-        initial['email'] = user.email
-
-        return initial
-
-    def get_object(self):
-        return get_object_or_404(Artists, user=self.request.user)
-
-    def get_success_url(self):
-        return reverse('profile_page', kwargs={'user_pk': self.object.user.pk})
+    def perform_create(self, serializer):
+        user = serializer.save()
+        login(self.request, user)
 
 
-class ProfilePage(DetailView):
-    model = Artists
-    context_object_name = 'artist'
-    template_name = 'profile.html'
+class LoginView(APIView):
 
-    def get_context_data(self, **kwargs):
-        context = super(ProfilePage, self).get_context_data(**kwargs)
-        photos = Photo.objects.filter(artist=self.object)
-        context['photos'] = photos
+    serializer_class = SigninArtistSerializer
 
-        if self.request.user == self.object.user:
-            context['is_user'] = True
-            context['form'] = UploadPhotoForm()
-        else:
-            context['is_user'] = False
-            # get current artist to see if he's following the artist he's
-            # watching
-            cur_art = Artists.objects.get(user=self.request.user)
-            context['followed'] = self.object in cur_art.artists_followed.all()
-
-        return context
-
-    def get_object(self):
-        return self.get_queryset()
-
-    def get_queryset(self):
-        user_pk = self.kwargs.get('user_pk', '')
-        artist = get_object_or_404(Artists, user__pk=user_pk)
-
-        return artist
+    def post(self, request):
+        serializer = SigninArtistSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            login(request, serializer.get_user())
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def artist_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            form.clean()
-            login(request, form.user_cache)
+class LogoutView(APIView):
 
-            return HttpResponseRedirect(
-                reverse(
-                    'profile_page',
-                    kwargs={'user_pk': form.user_cache.pk}
-                )
-             )
-    else:
-        form = AuthenticationForm()
+    def post(self, request):
+        logout(request)
 
-    return render(request, 'login.html', {'form': form})
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def artist_logout(request):
-    logout(request)
+class ArtistProfileView(RetrieveUpdateDestroyAPIView):
 
-    return HttpResponseRedirect('/')
-
-
-def artist_delete(request):
-    user = User.objects.get(username=request.user.username)
-    user.delete()
-
-    return HttpResponseRedirect('/')
-
-
-@login_required
-def follow_artist(request, **kwargs):
-    artist = Artists.objects.get(user=request.user)
-    artist_pk = kwargs.get('artist_pk', '')
-    artist_followed = get_object_or_404(Artists, pk=artist_pk)
-
-    if artist_followed in artist.artists_followed.all():
-        artist.artists_followed.remove(artist_followed)
-    else:
-        artist.artists_followed.add(artist_followed)
-
-    return HttpResponseRedirect(
-        reverse(
-            'profile_page',
-            kwargs={'user_pk': artist_followed.user.pk}
-        )
+    serializer_class = ArtistSerializer
+    queryset = Artists.objects.filter(user__is_active=True)
+    lookup_field = 'user__username'
+    lookup_url_kwarg = 'username'
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsAuthenticatedAndIsOwner
     )
+
+    def put(self, request, **kwargs):
+        error = {
+            'err': 'this endpoint only accept PATCH, DELETE and GET methods'
+        }
+
+        return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
