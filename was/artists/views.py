@@ -7,6 +7,9 @@ from rest_framework.generics import (
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+from permissions import IsAuthenticatedAndIsOwner
 
 from .serializers import (
     Artists,
@@ -50,6 +53,10 @@ class ArtistProfileView(RetrieveUpdateDestroyAPIView):
     queryset = Artists.objects.filter(user__is_active=True)
     lookup_field = 'user__username'
     lookup_url_kwarg = 'username'
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsAuthenticatedAndIsOwner
+    )
 
     def put(self, request, **kwargs):
         error = {
