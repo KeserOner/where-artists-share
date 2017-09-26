@@ -3,7 +3,8 @@ from django.contrib.auth import login, logout
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
-    RetrieveUpdateDestroyAPIView
+    RetrieveUpdateDestroyAPIView,
+    ListAPIView
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,7 +16,8 @@ from .serializers import (
     Artists,
     SignupArtistSerializer,
     SigninArtistSerializer,
-    ArtistSerializer
+    ArtistSerializer,
+    ArtistListSerializer
 )
 
 
@@ -64,3 +66,9 @@ class ArtistProfileView(RetrieveUpdateDestroyAPIView):
         }
 
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class ArtistListView(ListAPIView):
+
+    serializer_class = ArtistListSerializer
+    queryset = Artists.objects.filter(user__is_active=True)
