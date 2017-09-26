@@ -170,3 +170,12 @@ class ArtistSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+
+
+class ArtistListSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(source='user.username')
+
+    class Meta:
+        model = Artists
+        fields = ('id', 'username', 'artist_image')
