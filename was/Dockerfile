@@ -1,21 +1,13 @@
-############################################################
-# Dockerfile to build WAS container
-# Based on Python
-############################################################
-
-# Set the base image to Python
 FROM python:3.4
 
-################## BEGIN INSTALLATION ######################
-# Install all requirements
-ADD requirements.txt /tmp/
-RUN pip install -r /tmp/requirements.txt
+# Create app directory
+RUN mkdir -p /usr/src/where-artists-share
+WORKDIR /usr/src/where-artists-share
 
-# Create the working directory
-RUN mkdir /where-artists-share
-WORKDIR /where-artists-share
+# Install requirements
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Exposing port 8000
-EXPOSE 8000
+COPY . .
 
-CMD ["bash", "-e", "./setup.sh"]
+CMD ["bash", "-e", "./serve.sh"]

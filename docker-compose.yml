@@ -1,7 +1,18 @@
-web:
-    build: was
+version: '3.3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: was
+      POSTGRES_DB: was
+      POSTGRES_PASSWORD: foobar
+  web:
+    build: 'was'
+    depends_on:
+      - db
     volumes:
-        - ./was:/where-artists-share
+      - ./was:/usr/src/where-artists-share
     ports:
-        - "8000:8000"
+      - '8000:8000'
     tty: true
