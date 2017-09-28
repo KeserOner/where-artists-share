@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
 
 from .views import (
     PhotoView,
@@ -23,7 +22,11 @@ urlpatterns = [
         ListArtistPhotoView.as_view(),
         name='list_photo_artist'
     ),
+    url(
+        r'^create-album/(?P<username>[A-Za-z _-]+)/$',
+        CreateAlbumView.as_view(),
+        name='create_album'
+    ),
     url(r'^albums/(?P<user_pk>\d+)/$', AlbumListView.as_view(), name='list_artist_albums'),
-    url(r'^create-album/$', login_required(CreateAlbumView.as_view()), name='create_album'),
     url(r'^album/(?P<pk>\d+)/$', AlbumView.as_view(), name='album_detail')
 ]

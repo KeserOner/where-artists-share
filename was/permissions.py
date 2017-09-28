@@ -1,5 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from artists.models import Artists
+
 
 class IsAuthenticatedAndIsOwner(BasePermission):
 
@@ -9,6 +11,8 @@ class IsAuthenticatedAndIsOwner(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         if request.user.is_authenticated():
-            if request.user == obj.user:
-                return True
-        return False
+            if hasattr(obj, 'user'):
+                return request.user == obj.user
+            else:
+                artist = Artists.objects.get(user=request.user)
+                return artist == obj.artist
