@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -22,8 +21,8 @@ urlpatterns = [
         name='list_artist_albums'
     ),
     path(
-        'create-album/',
-        login_required(views.CreateAlbumView.as_view()),
+        'create-album/<slug:username>/',
+        views.CreateAlbumView.as_view(),
         name='create_album'
     ),
     path(
