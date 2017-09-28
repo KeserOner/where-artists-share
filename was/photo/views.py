@@ -1,15 +1,17 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
+)
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import (
-    RetrieveAPIView,
+    RetrieveDestroyAPIView,
     CreateAPIView
 )
 
@@ -21,10 +23,11 @@ from .forms import UploadPhotoForm, CreateAlbumForm
 from .models import Photo, Album, AlbumPhotoRelation
 
 
-class PhotoView(RetrieveAPIView):
+class PhotoView(RetrieveDestroyAPIView):
 
     serializer_class = PhotoSerializer
     queryset = Photo.objects.all()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class CreatePhotoView(CreateAPIView):
@@ -43,12 +46,6 @@ class CreatePhotoView(CreateAPIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         return context
-
-
-@login_required
-def delete_photo_artist(request, photo_id):
-    photo = Photo.objects.get(id=photo_id)
-    photo.delete()
 
 
 class AlbumListView(ListView):
