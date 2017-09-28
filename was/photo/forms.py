@@ -30,23 +30,3 @@ class UploadPhotoForm(ModelForm):
             )
 
         return photo
-
-
-class CreateAlbumForm(ModelForm):
-
-    class Meta:
-        model = Album
-        fields = ['title']
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(CreateAlbumForm, self).__init__(*args, **kwargs)
-
-    def save(self):
-        album = super(CreateAlbumForm, self).save(commit=False)
-
-        artist = Artists.objects.get(user=self.request.user)
-        album.artist = artist
-        album.save()
-
-        return album

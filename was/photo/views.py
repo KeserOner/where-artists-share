@@ -1,8 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.urls import reverse
 
 from rest_framework.permissions import (
     IsAuthenticated,
@@ -13,9 +12,10 @@ from rest_framework.response import Response
 
 from artists.models import Artists
 from utils import format_error
+from permissions import IsAuthenticatedAndIsOwner
 
-from .serializers import PhotoSerializer
-from .forms import UploadPhotoForm, CreateAlbumForm
+from .serializers import PhotoSerializer, AlbumSerializer
+from .forms import UploadPhotoForm
 from .models import Photo, Album, AlbumPhotoRelation
 
 
@@ -59,6 +59,23 @@ class CreatePhotoView(generics.CreateAPIView):
         return context
 
 
+class CreateAlbumView(generics.CreateAPIView):
+
+    serializer_class = AlbumSerializer
+    permission_classes = (IsAuthenticated, IsAuthenticatedAndIsOwner)
+
+    def get_serializer_context(self):
+        context = super(CreateAlbumView, self).get_serializer_context()
+        username = self.kwargs.get('username', '')
+        try:
+            context['artist'] = Artists.objects.get(user__username=username)
+        except ObjectDoesNotExist:
+            data = format_error('user does not exist')
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        return context
+
+
 class AlbumListView(ListView):
     model = Album
     template_name = 'album_list.html'
@@ -81,23 +98,6 @@ class AlbumListView(ListView):
             queryset[album.title] = (photo, album.pk)
 
         return queryset
-
-
-class CreateAlbumView(CreateView):
-
-    model = Album
-    form_class = CreateAlbumForm
-    template_name = 'create_album.html'
-
-    def get_form_kwargs(self):
-        kwargs = super(CreateAlbumView, self).get_form_kwargs()
-        kwargs.update({'request': self.request})
-
-        return kwargs
-
-    def get_success_url(self):
-        user_pk = self.request.user.pk
-        return reverse('list_artist_albums', kwargs={'user_pk': user_pk})
 
 
 class AlbumView(DetailView):
