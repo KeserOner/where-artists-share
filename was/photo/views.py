@@ -12,7 +12,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import (
     RetrieveDestroyAPIView,
-    CreateAPIView
+    CreateAPIView,
+    ListAPIView
 )
 
 from artists.models import Artists
@@ -28,6 +29,21 @@ class PhotoView(RetrieveDestroyAPIView):
     serializer_class = PhotoSerializer
     queryset = Photo.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class ListArtistPhotoView(ListAPIView):
+
+    serializer_class = PhotoSerializer
+
+    def get_queryset(self):
+        username = self.kwargs.get('username', '')
+        try:
+            artist = Artists.objects.get(user__username=username)
+        except ObjectDoesNotExist:
+            data = format_error('user %s does not exist' % username)
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        return Photo.objects.filter(artist=artist)
 
 
 class CreatePhotoView(CreateAPIView):
