@@ -1,47 +1,48 @@
-import json
-
-from django.http import HttpResponse, Http404
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 
-from artists.models import Artists
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.generics import (
+    RetrieveAPIView,
+    CreateAPIView
+)
 
+from artists.models import Artists
+from utils import format_error
+
+from .serializers import PhotoSerializer
 from .forms import UploadPhotoForm, CreateAlbumForm
 from .models import Photo, Album, AlbumPhotoRelation
 
 
-@login_required
-@require_POST
-def upload_photo_artist(request, **kwargs):
-    form = UploadPhotoForm(
-        request.POST,
-        request.FILES,
-        request=request
-    )
+class PhotoView(RetrieveAPIView):
 
-    if form.is_valid():
-        form.clean()
-        form.save()
-        response = {
-            'code': 1,
-            'message': 'success',
-        }
+    serializer_class = PhotoSerializer
+    queryset = Photo.objects.all()
 
-        return HttpResponse(
-            json.dumps(response),
-            content_type='application/json'
-        )
 
-    else:
-        response = form.errors.as_json()
+class CreatePhotoView(CreateAPIView):
 
-        return HttpResponse(
-            response,
-            content_type='application/json'
-        )
+    serializer_class = PhotoSerializer
+    queryset = Photo.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_context(self):
+        context = super(CreatePhotoView, self).get_serializer_context()
+        username = self.kwargs.get('username', '')
+        try:
+            context['artist'] = Artists.objects.get(user__username=username)
+        except ObjectDoesNotExist:
+            data = format_error('user does not exist')
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        return context
 
 
 @login_required
