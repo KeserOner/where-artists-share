@@ -18,6 +18,8 @@ Working with *Docker development containers* requires **Docker** and **Docker Co
 
 To start the containers, run the following command:
 
-`docker-compose up`
-
+```
+cd was
+docker-compose up
+```
 
