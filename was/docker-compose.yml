@@ -8,11 +8,11 @@ services:
       POSTGRES_DB: was
       POSTGRES_PASSWORD: foobar
   web:
-    build: 'was'
+    build: .
     depends_on:
       - db
     volumes:
-      - ./was:/usr/src/where-artists-share
+      - .:/usr/src/where-artists-share
     ports:
       - '8000:8000'
     tty: true
