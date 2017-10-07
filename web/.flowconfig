@@ -6,3 +6,5 @@
 [libs]
 
 [options]
+# Webpack loaders
+module.name_mapper='.*\.css$' -> '<PROJECT_ROOT>/flow-stubs/css-modules.js'
