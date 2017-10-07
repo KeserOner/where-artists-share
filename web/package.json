@@ -6,7 +6,15 @@
   "author": "KeserOner",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --port 8080 --content-base dist/ --inline --hot --history-api-fallback"
+    "start": "webpack-dev-server --host 0.0.0.0 --port 8080 --content-base dist/ --inline --hot --history-api-fallback",
+    "prettier": "prettier --write --single-quote --trailing-comma es5 --parser babylon",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "gitDir": "../",
+    "linters": {
+      "src/**/*.js": "prettier -l --single-quote --trailing-comma es5 --parser babylon"
+    }
   },
   "dependencies": {
     "bootstrap": "4.0.0-beta",
@@ -27,6 +35,9 @@
     "flow-bin": "^0.56.0",
     "flow-typed": "^2.1.5",
     "html-webpack-plugin": "^2.30.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.2.3",
+    "prettier": "^1.7.4",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   }

@@ -1,11 +1,19 @@
 // @flow
 
 import React from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 class NavbarComponent extends React.Component<any, any> {
-  toggle: Function
+  toggle: Function;
 
   constructor() {
     super();
@@ -45,4 +53,4 @@ class NavbarComponent extends React.Component<any, any> {
   }
 }
 
-export default NavbarComponent
+export default NavbarComponent;
