@@ -8,12 +8,16 @@
   "scripts": {
     "start": "webpack-dev-server --host 0.0.0.0 --port 8080 --content-base dist/ --inline --hot --history-api-fallback",
     "prettier": "prettier --write --single-quote --trailing-comma es5 --parser babylon",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "eslint": "eslint ."
   },
   "lint-staged": {
     "gitDir": "../",
     "linters": {
-      "src/**/*.js": "prettier -l --single-quote --trailing-comma es5 --parser babylon"
+      "web/src/**/*.js": [
+        "prettier",
+        "eslint"
+      ]
     }
   },
   "dependencies": {
