@@ -12,7 +12,11 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class NavbarComponent extends React.Component<any, any> {
+type State = {
+  isOpen: boolean,
+  title: string,
+}
+class NavbarComponent extends React.Component<any, State> {
   toggle: Function;
 
   constructor() {
