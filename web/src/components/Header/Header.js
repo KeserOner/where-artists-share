@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-import banner from '../../assets/banner.jpg';
+import banner from '../../../assets/banner.jpg';
 
 type State = {
   isOpen: boolean,
@@ -51,7 +51,9 @@ class Header extends React.Component<any, State> {
       <div>
         <div style={bannerStyle} />
         <Navbar color="success" dark expand="md">
-          <NavbarBrand href="/">WAS</NavbarBrand>
+          <NavbarBrand tag={Link} to="/">
+            WAS
+          </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
