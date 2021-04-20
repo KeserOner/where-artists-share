@@ -2,19 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.views.generic import ListView, CreateView
 from django.views.generic.detail import DetailView
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly
 )
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.generics import (
-    RetrieveDestroyAPIView,
-    CreateAPIView,
-    ListAPIView
-)
 
 from artists.models import Artists
 from utils import format_error
@@ -24,14 +19,14 @@ from .forms import UploadPhotoForm, CreateAlbumForm
 from .models import Photo, Album, AlbumPhotoRelation
 
 
-class PhotoView(RetrieveDestroyAPIView):
+class PhotoView(generics.RetrieveDestroyAPIView):
 
     serializer_class = PhotoSerializer
     queryset = Photo.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-class ListArtistPhotoView(ListAPIView):
+class ListArtistPhotoView(generics.ListAPIView):
 
     serializer_class = PhotoSerializer
 
@@ -40,13 +35,13 @@ class ListArtistPhotoView(ListAPIView):
         try:
             artist = Artists.objects.get(user__username=username)
         except ObjectDoesNotExist:
-            data = format_error('user %s does not exist' % username)
+            data = format_error(f'user {username} does not exist')
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         return Photo.objects.filter(artist=artist)
 
 
-class CreatePhotoView(CreateAPIView):
+class CreatePhotoView(generics.CreateAPIView):
 
     serializer_class = PhotoSerializer
     queryset = Photo.objects.all()

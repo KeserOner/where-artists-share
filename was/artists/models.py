@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Artists(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     artist_image = models.ImageField(
         verbose_name='Artist\'s profile image',
