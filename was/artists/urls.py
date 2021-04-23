@@ -6,18 +6,18 @@ urlpatterns = [
     path(
         'register/',
         views.CreateArtistAPIView.as_view(),
-        name='register_user'
+        name='artist_register'
     ),
     path('login/', views.LoginView.as_view(), name='artist_login'),
     path('logout/', views.LogoutView.as_view(), name='artist_logout'),
     path(
         'list-artists/',
         views.ArtistListView.as_view(),
-        name='list_artists'
+        name='artists_list'
     ),
     path(
         '<slug:username>/',
         views.ArtistProfileView.as_view(),
-        name='profile_page'
+        name='artist_detail'
     )
 ]

@@ -26,7 +26,7 @@ SECRET_KEY = '0tj_^kafp-^qzawt5pcfpw7mgw0x&m5n^gj)tsy=xg!kqz*c(&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'crew.apps.CrewConfig',
     'home.apps.HomeConfig',
     'artists.apps.ArtistsConfig',
-    'photo.apps.PhotoConfig'
+    'photo.apps.PhotoConfig',
 ]
 
 MIDDLEWARE = [
@@ -88,12 +88,16 @@ WSGI_APPLICATION = 'was.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'was_db',
+        'USER': 'was',
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': '127.0.01',
+        'PORT': '5432',
         'OPTIONS': {},
+        'TEST': {
+            'NAME': 'was_db_test',
+            'PASSWORD': os.environ.get('DB_TEST_PASSWORD')
+        }
     }
 }
 

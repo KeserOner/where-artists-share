@@ -1,11 +1,7 @@
 from django.contrib.auth import login, logout
 
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-    ListAPIView
-)
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -21,7 +17,7 @@ from .serializers import (
 )
 
 
-class CreateArtistAPIView(CreateAPIView):
+class CreateArtistAPIView(generics.CreateAPIView):
 
     serializer_class = SignupArtistSerializer
 
@@ -49,7 +45,7 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ArtistProfileView(RetrieveUpdateDestroyAPIView):
+class ArtistProfileView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = ArtistSerializer
     queryset = Artists.objects.filter(user__is_active=True)
@@ -68,7 +64,7 @@ class ArtistProfileView(RetrieveUpdateDestroyAPIView):
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class ArtistListView(ListAPIView):
+class ArtistListView(generics.ListAPIView):
 
     serializer_class = ArtistListSerializer
     queryset = Artists.objects.filter(user__is_active=True)

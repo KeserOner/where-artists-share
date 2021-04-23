@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch.dispatcher import receiver
 from django.contrib.auth.models import User
 
 
@@ -39,3 +40,23 @@ class Artists(models.Model):
 
     def __str__(self):
         return 'Profil de %s' % self.user.username
+
+
+@receiver(models.signals.pre_delete, sender=Artists)
+def delete_images(sender, instance, **kwargs):
+    if instance.artist_image:
+        instance.artist_image.delete(False)
+    if instance.artist_banner:
+        instance.artist_banner.delete(False)
+
+
+@receiver(models.signals.pre_save, sender=Artists)
+def update_images(sender, instance, **kwargs):
+    if instance.id is None:
+        return False
+
+    prev = Artists.objects.get(id=instance.id)
+    if prev.artist_image != instance.artist_image:
+        prev.artist_image.delete(False)
+    if prev.artist_banner != instance.artist_banner:
+        prev.artist_banner.delete(False)

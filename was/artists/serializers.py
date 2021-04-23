@@ -56,15 +56,12 @@ class SignupArtistSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-
-        password = validated_data['password1']
-        username = validated_data['username']
         user = User.objects.create_user(
-            username,
+            validated_data['username'],
             email=validated_data['email'],
         )
 
-        user.set_password(password)
+        user.set_password(validated_data['password1'])
         user.is_active = True
         user.save()
 
@@ -96,8 +93,9 @@ class SigninArtistSerializer(serializers.Serializer):
             try:
                 user = User.objects.get(email=username)
             except ObjectDoesNotExist:
-                raise serializers.ValidationError('no user with this email \
-                                                  or username')
+                raise serializers.ValidationError(
+                    'no user with this email or username')
+
         auth_user = authenticate(username=user.username,
                                  password=data.get('password'))
 
@@ -113,7 +111,7 @@ class SigninArtistSerializer(serializers.Serializer):
 
 class ArtistSerializer(serializers.ModelSerializer):
 
-    user = serializers.RegexField(
+    username = serializers.RegexField(
         r'^[A-Za-z0-9 _-]+$',
         min_length=3,
         validators=[
@@ -149,7 +147,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artists
         fields = (
-            'user', 'artist_image', 'artist_banner',
+            'username', 'artist_image', 'artist_banner',
             'artist_bio', 'artist_signature', 'email',
             'artists_followed', 'id'
         )
