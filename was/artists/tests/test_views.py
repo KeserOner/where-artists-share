@@ -7,8 +7,9 @@ from django.urls import reverse
 
 from artists.models import Artists
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_create_artists(api_client):
     data = {
         'username': 'foobar',
@@ -37,7 +38,6 @@ def test_create_artists(api_client):
     assert artist.user.email == data['email']
 
 
-@pytest.mark.django_db
 def test_login(api_client, foobar):
     response = api_client.post(
         reverse('artist_login'),
@@ -76,7 +76,6 @@ def test_login(api_client, foobar):
     assert 'invalid password' in error
 
 
-@pytest.mark.django_db
 def test_get_artist_detail(api_client, foobar):
     banner = SimpleUploadedFile(
         name='banner.png',
@@ -112,7 +111,6 @@ def test_get_artist_detail(api_client, foobar):
     shutil.rmtree(settings.MEDIA_ROOT)
 
 
-@pytest.mark.django_db
 def test_patch_artist_detail(auth_api_client, foobar):
     profile_pic = SimpleUploadedFile(
         name='profile_pic.png',
@@ -138,7 +136,6 @@ def test_patch_artist_detail(auth_api_client, foobar):
     shutil.rmtree(settings.MEDIA_ROOT)
 
 
-@pytest.mark.django_db
 def test_put_artist_detail(auth_api_client, foobar):
     response = auth_api_client.put(
         reverse(
@@ -151,7 +148,6 @@ def test_put_artist_detail(auth_api_client, foobar):
     assert response.status_code == 405
 
 
-@pytest.mark.django_db
 def test_delete_artist_detail(auth_api_client, foobar):
     assert Artists.objects.count() == 1
 

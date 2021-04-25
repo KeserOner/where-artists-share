@@ -53,7 +53,7 @@ class SignupArtistSerializer(serializers.Serializer):
         if data['password1'] != data['password2']:
             raise serializers.ValidationError('Passwords mismatch')
 
-        return data
+        return super().validate(data)
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -154,7 +154,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def update(self, instance, validated_data):
-        artists_followed_qs = validated_data.pop('artists_followed', '')
+        artists_followed_ids = validated_data.pop('artists_followed', '')
+        artists_followed_qs = Artists.objects.filter(
+            id__in=artists_followed_ids
+        )
         instance = super(ArtistSerializer, self).update(instance,
                                                         validated_data)
         if artists_followed_qs:
