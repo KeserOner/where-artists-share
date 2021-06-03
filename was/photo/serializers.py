@@ -4,15 +4,14 @@ from .models import Photo, Album
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Photo
-        fields = ('id', 'picture', 'comment')
-        read_only_fields = ('id',)
+        fields = ("id", "picture", "comment")
+        read_only_fields = ("id",)
 
     def create(self, validated_data):
         photo = Photo(**validated_data)
-        photo.artist = self.context.get('artist')
+        photo.artist = self.context.get("artist")
         photo.save()
 
         return photo

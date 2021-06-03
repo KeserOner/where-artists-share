@@ -13,7 +13,7 @@ from .serializers import (
     SignupArtistSerializer,
     SigninArtistSerializer,
     ArtistSerializer,
-    ArtistListSerializer
+    ArtistListSerializer,
 )
 
 
@@ -38,7 +38,6 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-
     def post(self, request):
         logout(request)
 
@@ -49,17 +48,12 @@ class ArtistProfileView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = ArtistSerializer
     queryset = Artists.objects.filter(user__is_active=True)
-    lookup_field = 'user__username'
-    lookup_url_kwarg = 'username'
-    permission_classes = (
-        IsAuthenticatedOrReadOnly,
-        IsAuthenticatedAndIsOwner
-    )
+    lookup_field = "user__username"
+    lookup_url_kwarg = "username"
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAuthenticatedAndIsOwner)
 
     def put(self, request, **kwargs):
-        error = {
-            'err': 'this endpoint only accept PATCH, DELETE and GET methods'
-        }
+        error = {"err": "this endpoint only accept PATCH, DELETE and GET methods"}
 
         return Response(data=error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

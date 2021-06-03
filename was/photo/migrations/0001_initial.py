@@ -9,35 +9,96 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('artists', '0001_initial'),
+        ("artists", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Album',
+            name="Album",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255, unique=True, verbose_name='Album title')),
-                ('create_date', models.DateField(auto_now_add=True)),
-                ('last_update', models.DateField(auto_now=True)),
-                ('artist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='albums', to='artists.artists')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=255, unique=True, verbose_name="Album title"
+                    ),
+                ),
+                ("create_date", models.DateField(auto_now_add=True)),
+                ("last_update", models.DateField(auto_now=True)),
+                (
+                    "artist",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="albums",
+                        to="artists.artists",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Photo',
+            name="Photo",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to='art_picture/', verbose_name="Artist's picture")),
-                ('comment', models.TextField(max_length=500, verbose_name='Comment')),
-                ('artist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='photos', to='artists.artists')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "picture",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="art_picture/",
+                        verbose_name="Artist's picture",
+                    ),
+                ),
+                ("comment", models.TextField(max_length=500, verbose_name="Comment")),
+                (
+                    "artist",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="photos",
+                        to="artists.artists",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='AlbumPhotoRelation',
+            name="AlbumPhotoRelation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('album', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='photo.album')),
-                ('photo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='photo.photo')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "album",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="photo.album"
+                    ),
+                ),
+                (
+                    "photo",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="photo.photo"
+                    ),
+                ),
             ],
         ),
     ]

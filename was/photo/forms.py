@@ -1,15 +1,13 @@
+from artists.models import Artists
 from django.forms.models import ModelForm
 
-from artists.models import Artists
-
-from .models import Photo, Album, AlbumPhotoRelation
+from .models import Album, AlbumPhotoRelation, Photo
 
 
 class UploadPhotoForm(ModelForm):
-
     class Meta:
         model = Photo
-        fields = ['picture', 'comment']
+        fields = ["picture", "comment"]
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -22,11 +20,8 @@ class UploadPhotoForm(ModelForm):
         photo.artist = artist
         photo.save()
 
-        if 'album_pk' in self.data:
-            album = Album.objects.get(pk=self.data['album_pk'])
-            AlbumPhotoRelation.objects.create(
-                photo=photo,
-                album=album
-            )
+        if "album_pk" in self.data:
+            album = Album.objects.get(pk=self.data["album_pk"])
+            AlbumPhotoRelation.objects.create(photo=photo, album=album)
 
         return photo

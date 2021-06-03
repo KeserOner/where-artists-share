@@ -15,15 +15,60 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Artists',
+            name="Artists",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('artist_image', models.ImageField(blank=True, null=True, upload_to='artist_image/', verbose_name="Artist's profile image")),
-                ('artist_banner', models.ImageField(blank=True, null=True, upload_to='artist_image/', verbose_name="Artist's banner")),
-                ('artist_bio', models.TextField(max_length=500, verbose_name="Artist's biografy")),
-                ('artist_signature', models.CharField(max_length=70, verbose_name="Artist's signature")),
-                ('artist_followed', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='artists_followed', to='artists.artists')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "artist_image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="artist_image/",
+                        verbose_name="Artist's profile image",
+                    ),
+                ),
+                (
+                    "artist_banner",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="artist_image/",
+                        verbose_name="Artist's banner",
+                    ),
+                ),
+                (
+                    "artist_bio",
+                    models.TextField(max_length=500, verbose_name="Artist's biografy"),
+                ),
+                (
+                    "artist_signature",
+                    models.CharField(max_length=70, verbose_name="Artist's signature"),
+                ),
+                (
+                    "artist_followed",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="artists_followed",
+                        to="artists.artists",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

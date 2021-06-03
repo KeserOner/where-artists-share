@@ -8,16 +8,27 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('artists', '0001_initial'),
+        ("artists", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Crew',
+            name="Crew",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=150, unique=True, verbose_name='Crew')),
-                ('artists', models.ManyToManyField(to='artists.Artists')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=150, unique=True, verbose_name="Crew"),
+                ),
+                ("artists", models.ManyToManyField(to="artists.Artists")),
             ],
         ),
     ]
