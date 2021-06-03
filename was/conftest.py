@@ -13,17 +13,14 @@ def api_client():
 
 @pytest.fixture
 def foobar():
-    user = User.objects.create_user(
-        'foobar',
-        email='foobar@test.com'
-    )
-    user.set_password('testpwd123')
+    user = User.objects.create_user("foobar", email="foobar@test.com")
+    user.set_password("testpwd123")
     user.save()
 
     return Artists.objects.create(
         user=user,
-        artist_bio='A little story about me',
-        artist_signature='FoObAr',
+        artist_bio="A little story about me",
+        artist_signature="FoObAr",
     )
 
 
