@@ -1,9 +1,7 @@
 import pytest
-
-from django.contrib.auth.models import User
-
 from artists import serializers
 from artists.models import Artists
+from django.contrib.auth.models import User
 
 pytestmark = pytest.mark.django_db
 

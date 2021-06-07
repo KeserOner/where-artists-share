@@ -1,6 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch.dispatcher import receiver
-from django.contrib.auth.models import User
 
 
 class Artists(models.Model):
@@ -10,11 +10,16 @@ class Artists(models.Model):
         verbose_name="Artist's profile image",
         null=True,
         blank=True,
+        unique=True,
         upload_to="artist_image/",
     )
 
     artist_banner = models.ImageField(
-        verbose_name="Artist's banner", null=True, blank=True, upload_to="artist_image/"
+        verbose_name="Artist's banner",
+        unique=True,
+        null=True,
+        blank=True,
+        upload_to="artist_banner/",
     )
 
     artist_bio = models.TextField(max_length=500, verbose_name="Artist's biografy")
@@ -41,15 +46,3 @@ def delete_images(sender, instance, **kwargs):
         instance.artist_image.delete(False)
     if instance.artist_banner:
         instance.artist_banner.delete(False)
-
-
-@receiver(models.signals.pre_save, sender=Artists)
-def update_images(sender, instance, **kwargs):
-    if instance.id is None:
-        return False
-
-    prev = Artists.objects.get(id=instance.id)
-    if prev.artist_image != instance.artist_image:
-        prev.artist_image.delete(False)
-    if prev.artist_banner != instance.artist_banner:
-        prev.artist_banner.delete(False)
