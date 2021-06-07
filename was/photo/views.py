@@ -2,7 +2,6 @@ from artists.models import Artists
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.views.generic import ListView
-from django.views.generic.detail import DetailView
 from permissions import IsAuthenticatedAndIsOwner
 from rest_framework import generics, status
 from rest_framework.permissions import (IsAuthenticated,
@@ -10,7 +9,6 @@ from rest_framework.permissions import (IsAuthenticated,
 from rest_framework.response import Response
 from utils import format_error
 
-from .forms import UploadPhotoForm
 from .models import Album, AlbumPhotoRelation, Photo
 from .serializers import AlbumSerializer, PhotoSerializer
 
