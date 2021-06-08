@@ -1,7 +1,5 @@
 from artists.models import Artists
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
-from django.views.generic import ListView
 from permissions import IsAuthenticatedAndIsOwner
 from rest_framework import generics, status
 from rest_framework.permissions import (IsAuthenticated,
@@ -9,20 +7,19 @@ from rest_framework.permissions import (IsAuthenticated,
 from rest_framework.response import Response
 from utils import format_error
 
-from .models import Album, AlbumPhotoRelation, Photo
-from .serializers import AlbumSerializer, PhotoSerializer
+from . import models, serializers
 
 
 class PhotoView(generics.RetrieveDestroyAPIView):
 
-    serializer_class = PhotoSerializer
-    queryset = Photo.objects.all()
+    serializer_class = serializers.PhotoSerializer
+    queryset = models.Photo.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class ListArtistPhotoView(generics.ListAPIView):
 
-    serializer_class = PhotoSerializer
+    serializer_class = serializers.PhotoSerializer
 
     def get_queryset(self):
         username = self.kwargs.get("username", "")
@@ -32,13 +29,13 @@ class ListArtistPhotoView(generics.ListAPIView):
             data = format_error(f"user {username} does not exist")
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-        return Photo.objects.filter(artist=artist)
+        return models.Photo.objects.filter(artist=artist)
 
 
 class CreatePhotoView(generics.CreateAPIView):
 
-    serializer_class = PhotoSerializer
-    queryset = Photo.objects.all()
+    serializer_class = serializers.PhotoSerializer
+    queryset = models.Photo.objects.all()
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
@@ -53,9 +50,16 @@ class CreatePhotoView(generics.CreateAPIView):
         return context
 
 
+class AlbumView(generics.RetrieveDestroyAPIView):
+
+    serializer_class = serializers.AlbumSerializer()
+    queryset = models.Album.objects.all()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
 class CreateAlbumView(generics.CreateAPIView):
 
-    serializer_class = AlbumSerializer
+    serializer_class = serializers.AlbumSerializer
     permission_classes = (IsAuthenticated, IsAuthenticatedAndIsOwner)
 
     def get_serializer_context(self):
@@ -70,25 +74,16 @@ class CreateAlbumView(generics.CreateAPIView):
         return context
 
 
-class AlbumListView(ListView):
-    model = Album
-    template_name = "album_list.html"
-    context_object_name = "albums"
+class ListAlbumiew(generics.ListAPIView):
+
+    serializer_class = serializers.AlbumSerializer
 
     def get_queryset(self):
-        user_pk = self.kwargs.get("user_pk", "")
+        username = self.kwargs.get("username", "")
+        try:
+            artist = Artists.objects.get(user__username=username)
+        except ObjectDoesNotExist:
+            data = format_error(f"user {username} does not exist")
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-        if not user_pk:
-            return Http404()
-
-        artist = Artists.objects.get(user__pk=user_pk)
-        queryset = {}
-
-        for album in Album.objects.filter(artist__pk=artist.pk):
-            try:
-                photo = AlbumPhotoRelation.objects.filter(album=album)[0].photo
-            except IndexError:
-                photo = ""
-            queryset[album.title] = (photo, album.pk)
-
-        return queryset
+        return models.Album.objects.filter(artist=artist)
