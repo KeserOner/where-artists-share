@@ -1,4 +1,4 @@
-django==3.2.2
+django==3.2.4
 Pillow==8.2.0
 Markdown==2.6.9
 djangorestframework==3.12
